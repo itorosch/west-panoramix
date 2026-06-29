@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1001,
+    "nombreEvento": "Evento 1",
+    "direccion": "cmcx 3337",
+    "pais": "Argentina",
+    "ciudad": "Córdoba",
+    "nombreProductora": "kjz>cn<kcn.",
+    "fechaInicio": "2027-02-02T15:00",
+    "fechaTermino": "2027-02-03T15:00",
+    "estado": "Pendiente",
+    "fechaRegistro": "2026-06-29T20:52:32.611Z"
+  }
+]
