@@ -1,0 +1,50 @@
+{
+  "form": {
+    "title": "Registrar Nuevo Evento",
+    "titleEdit": "Editar Evento"
+  },
+  "label": {
+    "nombreEvento": "Nombre del Evento",
+    "direccion": "Dirección",
+    "pais": "País",
+    "ciudad": "Ciudad",
+    "nombreProductora": "Nombre Productora",
+    "fechaInicio": "Fecha y Hora de Inicio",
+    "fechaTermino": "Fecha y Hora de Término",
+    "estado": "Estado del Evento"
+  },
+  "placeholder": {
+    "nombreEvento": "Ej: Festival Folclórico Internacional",
+    "direccion": "Ej: Los Huasos #2233",
+    "nombreProductora": "Ej: Gamboa Producciones",
+    "selectPais": "— Seleccione país —",
+    "selectCiudad": "— Seleccione ciudad —"
+  },
+  "estado": {
+    "Pendiente": "Pendiente",
+    "Iniciado": "Iniciado",
+    "Finalizado": "Finalizado"
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "paisRequired": "Debe seleccionar un país",
+    "ciudadRequired": "Debe seleccionar una ciudad",
+    "fechaTerminoInvalida": "La fecha de término debe ser posterior a la de inicio"
+  },
+  "list": {
+    "title": "Listado de Eventos",
+    "filterLabel": "Filtrar por estado:",
+    "filterAll": "Todos",
+    "empty": "No hay eventos para mostrar.",
+    "productora": "Productora:",
+    "direccion": "Dirección:",
+    "inicio": "Inicio:",
+    "termino": "Término:",
+    "registrado": "Registrado:"
+  },
+  "message": {
+    "eventoCreado": "Evento \"{{nombre}}\" registrado exitosamente.",
+    "eventoActualizado": "Evento \"{{nombre}}\" actualizado exitosamente.",
+    "eventoEliminado": "Evento eliminado exitosamente."
+  }
+}

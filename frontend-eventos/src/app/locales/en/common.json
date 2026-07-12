@@ -1,0 +1,18 @@
+{
+  "app": {
+    "title": "West Panoramix",
+    "subtitle": "Event Management System"
+  },
+  "button": {
+    "newEvent": "+ Register Event",
+    "save": "Register Event",
+    "update": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "saving": "Saving..."
+  },
+  "language": {
+    "es": "Español",
+    "en": "English"
+  }
+}

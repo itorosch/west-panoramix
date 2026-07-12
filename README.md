@@ -50,6 +50,15 @@ La aplicación estará disponible en: **http://localhost:3000**
 - **SSR con Next.js**: Los eventos se cargan desde el servidor con un delay simulado de 3 segundos.
 - **Skeleton loaders**: Retroalimentación visual durante la carga de datos.
 - **Lazy loading con `next/dynamic`**: EventoForm, EventoList y AlertMessage se cargan de forma diferida.
+- **Internacionalización (i18n) con react-i18next**: soporte español/inglés. El idioma se detecta
+  automáticamente desde el navegador la primera vez, y luego puede cambiarse manualmente con el
+  selector ubicado en la esquina superior derecha (la preferencia queda guardada en el navegador).
+- **Formularios con React Hook Form**: el formulario de registro de eventos usa `useForm`,
+  `register` y `formState.errors` de React Hook Form. Todos los mensajes de validación (campos
+  obligatorios, fecha de término posterior a la de inicio, etc.) están internacionalizados y se
+  actualizan automáticamente si el usuario cambia el idioma.
+- **Formato de fecha/hora regional**: el listado de eventos formatea las fechas usando la API
+  `Intl` según el idioma activo de la aplicación (por ejemplo, `es-CL` vs `en-US`).
 - **Formulario de eventos** con validación de campos:
   - Identificador automático y correlativo
   - Nombre del evento

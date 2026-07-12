@@ -1,0 +1,50 @@
+{
+  "form": {
+    "title": "Register New Event",
+    "titleEdit": "Edit Event"
+  },
+  "label": {
+    "nombreEvento": "Event Name",
+    "direccion": "Address",
+    "pais": "Country",
+    "ciudad": "City",
+    "nombreProductora": "Production Company Name",
+    "fechaInicio": "Start Date and Time",
+    "fechaTermino": "End Date and Time",
+    "estado": "Event Status"
+  },
+  "placeholder": {
+    "nombreEvento": "E.g.: International Folk Festival",
+    "direccion": "E.g.: 2233 Huasos St.",
+    "nombreProductora": "E.g.: Gamboa Productions",
+    "selectPais": "— Select country —",
+    "selectCiudad": "— Select city —"
+  },
+  "estado": {
+    "Pendiente": "Pending",
+    "Iniciado": "Started",
+    "Finalizado": "Finished"
+  },
+  "validation": {
+    "required": "This field is required",
+    "paisRequired": "You must select a country",
+    "ciudadRequired": "You must select a city",
+    "fechaTerminoInvalida": "The end date must be after the start date"
+  },
+  "list": {
+    "title": "Event List",
+    "filterLabel": "Filter by status:",
+    "filterAll": "All",
+    "empty": "There are no events to show.",
+    "productora": "Production company:",
+    "direccion": "Address:",
+    "inicio": "Start:",
+    "termino": "End:",
+    "registrado": "Registered:"
+  },
+  "message": {
+    "eventoCreado": "Event \"{{nombre}}\" registered successfully.",
+    "eventoActualizado": "Event \"{{nombre}}\" updated successfully.",
+    "eventoEliminado": "Event deleted successfully."
+  }
+}

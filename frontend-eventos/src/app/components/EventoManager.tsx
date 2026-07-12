@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'react-i18next';
 import { Evento, createEvento, deleteEvento } from '../lib/api';
 
 // Skeletons inline para feedback visual durante lazy loading
@@ -70,6 +71,7 @@ interface EventoManagerProps {
 }
 
 export default function EventoManager({ initialEventos }: EventoManagerProps) {
+  const { t } = useTranslation('evento');
   const [eventos, setEventos] = useState<Evento[]>(initialEventos);
   const [alert, setAlert] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -90,7 +92,7 @@ export default function EventoManager({ initialEventos }: EventoManagerProps) {
     try {
       const newEvento = await createEvento(eventoData);
       setEventos((prev) => [newEvento, ...prev]);
-      setAlert({ message: `Evento "${newEvento.nombreEvento}" registrado exitosamente.`, type: 'success' });
+      setAlert({ message: t('message.eventoCreado', { nombre: newEvento.nombreEvento }), type: 'success' });
       setShowForm(false);
     } catch (error) {
       setAlert({ message: (error as Error).message, type: 'error' });
@@ -101,7 +103,7 @@ export default function EventoManager({ initialEventos }: EventoManagerProps) {
     try {
       await deleteEvento(id);
       setEventos((prev) => prev.filter((e) => e.id !== id));
-      setAlert({ message: 'Evento eliminado exitosamente.', type: 'success' });
+      setAlert({ message: t('message.eventoEliminado'), type: 'success' });
     } catch (error) {
       setAlert({ message: (error as Error).message, type: 'error' });
     }
@@ -117,8 +119,8 @@ export default function EventoManager({ initialEventos }: EventoManagerProps) {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-600">
-          <h1 className="text-3xl font-bold text-gray-900">West Panoramix</h1>
-          <p className="text-gray-500 mt-1">Sistema de Gestión de Eventos</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('app.title', { ns: 'common' })}</h1>
+          <p className="text-gray-500 mt-1">{t('app.subtitle', { ns: 'common' })}</p>
         </div>
 
         {/* Alerta */}
@@ -130,7 +132,7 @@ export default function EventoManager({ initialEventos }: EventoManagerProps) {
             onClick={() => setShowForm(true)}
             className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition font-medium shadow-sm"
           >
-            + Registrar Evento
+            {t('button.newEvent', { ns: 'common' })}
           </button>
         )}
 

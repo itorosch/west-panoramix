@@ -9,9 +9,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "i18next": "^26.3.6",
     "next": "15.3.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.81.0",
+    "react-i18next": "^17.0.9"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
