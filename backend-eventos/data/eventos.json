@@ -10,5 +10,18 @@
     "fechaTermino": "2027-02-03T15:00",
     "estado": "Pendiente",
     "fechaRegistro": "2026-06-29T20:52:32.611Z"
+  },
+  {
+    "id": 1002,
+    "nombreEvento": "Festival Oro",
+    "direccion": "Las encinas 3337",
+    "pais": "Chile",
+    "ciudad": "Santiago",
+    "nombreProductora": "Gamboa Producciones",
+    "fechaInicio": "2026-08-01T22:00",
+    "fechaTermino": "2026-08-03T00:00",
+    "estado": "Pendiente",
+    "productora": null,
+    "fechaRegistro": "2026-07-19T23:58:10.199Z"
   }
 ]

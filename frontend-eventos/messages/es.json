@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "West Panoramix",
+    "subtitle": "Sistema de Gestión de Eventos"
+  },
+  "nav": {
+    "logout": "Cerrar sesión",
+    "language": "Idioma"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "subtitle": "West Panoramix — Gestión de Eventos",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "role": "Rol",
+    "roleAdmin": "Administrador",
+    "roleProductora": "Productora",
+    "productora": "Nombre de productora",
+    "submit": "Ingresar",
+    "error": "Usuario o contraseña incorrectos"
+  },
+  "events": {
+    "listTitle": "Listado de Eventos",
+    "addButton": "Registrar Evento",
+    "editButton": "Editar",
+    "deleteButton": "Eliminar",
+    "saveButton": "Guardar cambios",
+    "cancelButton": "Cancelar",
+    "createButton": "Registrar Evento",
+    "noEvents": "No hay eventos para mostrar.",
+    "filterLabel": "Filtrar por estado:",
+    "filterAll": "Todos",
+    "registered": "Registrado:",
+    "productoraLabel": "Productora:",
+    "addressLabel": "Dirección:",
+    "startLabel": "Inicio:",
+    "endLabel": "Término:",
+    "successCreate": "Evento registrado exitosamente.",
+    "successEdit": "Evento actualizado exitosamente.",
+    "successDelete": "Evento eliminado exitosamente.",
+    "createTitle": "Registrar Nuevo Evento",
+    "editTitle": "Editar Evento"
+  },
+  "form": {
+    "id": "Identificador del Evento",
+    "idAuto": "Se genera automáticamente",
+    "name": "Nombre del Evento",
+    "namePlaceholder": "Ej: Festival Folclórico Internacional",
+    "address": "Dirección",
+    "addressPlaceholder": "Ej: Los Huasos #2233",
+    "country": "País",
+    "countryPlaceholder": "— Seleccione país —",
+    "city": "Ciudad",
+    "cityPlaceholder": "— Seleccione ciudad —",
+    "productoraName": "Nombre Productora",
+    "productoraPlaceholder": "Ej: Gamboa Producciones",
+    "startDate": "Fecha y Hora de Inicio",
+    "endDate": "Fecha y Hora de Término",
+    "registerDate": "Fecha y Hora de Registro",
+    "registerDateAuto": "Se registra automáticamente",
+    "status": "Estado del Evento",
+    "statusPending": "Pendiente",
+    "statusStarted": "Iniciado",
+    "statusFinished": "Finalizado",
+    "required": "Este campo es obligatorio",
+    "dateEndError": "La fecha de término debe ser posterior a la de inicio"
+  },
+  "roles": {
+    "admin": "Administrador",
+    "productora": "Productora"
+  }
+}

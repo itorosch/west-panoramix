@@ -1,25 +1,30 @@
 import type { Metadata } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getLocale } from 'next-intl/server';
+import { AuthProvider } from './context/AuthContext';
 import './globals.css';
-import Providers from './providers';
-import LanguageSelector from './components/LanguageSelector';
 
 export const metadata: Metadata = {
   title: 'West Panoramix — Gestión de Eventos',
   description: 'Sistema de registro y gestión de eventos para West Panoramix',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/**
+ * RootLayout: configura providers de i18n (next-intl) y autenticación (AuthProvider).
+ * Los mensajes se pasan al cliente desde el servidor (SSR).
+ */
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="es">
+    <html lang={locale}>
       <body className="antialiased">
-        <Providers>
-          <div className="relative min-h-screen">
-            <div className="absolute top-4 right-4 z-10">
-              <LanguageSelector />
-            </div>
+        <NextIntlClientProvider messages={messages}>
+          <AuthProvider>
             {children}
-          </div>
-        </Providers>
+          </AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

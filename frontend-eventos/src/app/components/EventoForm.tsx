@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { Evento } from '../lib/api';
 
-// Datos de países y ciudades
+// Datos de países y ciudades disponibles
 const PAISES_CIUDADES: Record<string, string[]> = {
   Argentina: ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'Tucumán'],
   Bolivia: ['La Paz', 'Cochabamba', 'Santa Cruz', 'Sucre', 'Oruro'],
@@ -22,14 +22,8 @@ const PAISES_CIUDADES: Record<string, string[]> = {
 };
 
 const PAISES = Object.keys(PAISES_CIUDADES).sort();
-const ESTADOS = ['Pendiente', 'Iniciado', 'Finalizado'] as const;
 
-interface EventoFormProps {
-  onSubmit: (evento: Omit<Evento, 'id' | 'fechaRegistro'>) => Promise<void>;
-  onCancel: () => void;
-}
-
-type FormValues = {
+export type EventoFormData = {
   nombreEvento: string;
   direccion: string;
   pais: string;
@@ -40,17 +34,28 @@ type FormValues = {
   estado: 'Pendiente' | 'Iniciado' | 'Finalizado';
 };
 
-export default function EventoForm({ onSubmit, onCancel }: EventoFormProps) {
-  const { t, i18n } = useTranslation('evento');
+interface EventoFormProps {
+  eventoToEdit?: Evento;
+  onSubmit: (data: EventoFormData) => Promise<void>;
+  onCancel: () => void;
+}
+
+/**
+ * Formulario de eventos con React Hook Form y validaciones i18n.
+ * Soporta modo creación y modo edición.
+ * El ID y la fecha de registro son de solo lectura.
+ */
+export default function EventoForm({ eventoToEdit, onSubmit, onCancel }: EventoFormProps) {
+  const t = useTranslations();
+  const isEdit = !!eventoToEdit;
 
   const {
     register,
     handleSubmit,
     watch,
-    setValue,
-    trigger,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+  } = useForm<EventoFormData>({
     defaultValues: {
       nombreEvento: '',
       direccion: '',
@@ -63,28 +68,24 @@ export default function EventoForm({ onSubmit, onCancel }: EventoFormProps) {
     },
   });
 
-  const paisSeleccionado = watch('pais');
-  const fechaInicio = watch('fechaInicio');
-  const ciudadesDisponibles = paisSeleccionado ? PAISES_CIUDADES[paisSeleccionado] || [] : [];
+  const selectedPais = watch('pais');
+  const ciudades = selectedPais ? PAISES_CIUDADES[selectedPais] || [] : [];
 
-  // Referencia siempre actualizada a los errores actuales, para poder leerlos
-  // sin agregar "errors" como dependencia del efecto (evitaría loops de render).
-  const errorsRef = useRef(errors);
-  errorsRef.current = errors;
-
-  // Si el usuario cambia el idioma mientras hay errores visibles en pantalla,
-  // se revalidan solo esos campos para que el mensaje se muestre traducido.
+  // Cargar datos del evento al editar
   useEffect(() => {
-    const camposConError = Object.keys(errorsRef.current) as (keyof FormValues)[];
-    if (camposConError.length > 0) {
-      trigger(camposConError);
+    if (eventoToEdit) {
+      reset({
+        nombreEvento: eventoToEdit.nombreEvento,
+        direccion: eventoToEdit.direccion,
+        pais: eventoToEdit.pais,
+        ciudad: eventoToEdit.ciudad,
+        nombreProductora: eventoToEdit.nombreProductora,
+        fechaInicio: eventoToEdit.fechaInicio,
+        fechaTermino: eventoToEdit.fechaTermino,
+        estado: eventoToEdit.estado,
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
-
-  const onSubmitForm = async (data: FormValues) => {
-    await onSubmit(data);
-  };
+  }, [eventoToEdit, reset]);
 
   const inputClass = (hasError: boolean) =>
     `mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 ${
@@ -93,140 +94,171 @@ export default function EventoForm({ onSubmit, onCancel }: EventoFormProps) {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('form.title')}</h2>
-      <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4" noValidate>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {isEdit ? t('events.editTitle') : t('events.createTitle')}
+      </h2>
+
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+
+        {/* ID (solo lectura en edición) */}
+        {isEdit && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">{t('form.id')}</label>
+            <input
+              type="text"
+              value={`#${eventoToEdit!.id}`}
+              readOnly
+              className="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+            />
+          </div>
+        )}
+
         {/* Nombre del evento */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            {t('label.nombreEvento')} <span className="text-red-500">*</span>
+            {t('form.name')} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            placeholder={t('placeholder.nombreEvento')}
-            {...register('nombreEvento', { required: t('validation.required') })}
+            placeholder={t('form.namePlaceholder')}
+            {...register('nombreEvento', { required: t('form.required') })}
             className={inputClass(!!errors.nombreEvento)}
           />
-          {errors.nombreEvento && <p className="text-red-600 text-xs mt-1">{errors.nombreEvento.message}</p>}
+          {errors.nombreEvento && <p className="text-red-500 text-xs mt-1">{errors.nombreEvento.message}</p>}
         </div>
 
         {/* Dirección */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            {t('label.direccion')} <span className="text-red-500">*</span>
+            {t('form.address')} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            placeholder={t('placeholder.direccion')}
-            {...register('direccion', { required: t('validation.required') })}
+            placeholder={t('form.addressPlaceholder')}
+            {...register('direccion', { required: t('form.required') })}
             className={inputClass(!!errors.direccion)}
           />
-          {errors.direccion && <p className="text-red-600 text-xs mt-1">{errors.direccion.message}</p>}
+          {errors.direccion && <p className="text-red-500 text-xs mt-1">{errors.direccion.message}</p>}
         </div>
 
         {/* País y Ciudad */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              {t('label.pais')} <span className="text-red-500">*</span>
+              {t('form.country')} <span className="text-red-500">*</span>
             </label>
             <select
-              {...register('pais', {
-                required: t('validation.paisRequired'),
-                onChange: () => setValue('ciudad', ''),
-              })}
+              {...register('pais', { required: t('form.required') })}
               className={inputClass(!!errors.pais)}
             >
-              <option value="">{t('placeholder.selectPais')}</option>
-              {PAISES.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
+              <option value="">{t('form.countryPlaceholder')}</option>
+              {PAISES.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
-            {errors.pais && <p className="text-red-600 text-xs mt-1">{errors.pais.message}</p>}
+            {errors.pais && <p className="text-red-500 text-xs mt-1">{errors.pais.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              {t('label.ciudad')} <span className="text-red-500">*</span>
+              {t('form.city')} <span className="text-red-500">*</span>
             </label>
             <select
-              {...register('ciudad', { required: t('validation.ciudadRequired') })}
-              disabled={!paisSeleccionado}
+              {...register('ciudad', { required: t('form.required') })}
+              disabled={!selectedPais}
               className={`${inputClass(!!errors.ciudad)} disabled:bg-gray-100 disabled:cursor-not-allowed`}
             >
-              <option value="">{t('placeholder.selectCiudad')}</option>
-              {ciudadesDisponibles.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
+              <option value="">{t('form.cityPlaceholder')}</option>
+              {ciudades.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
-            {errors.ciudad && <p className="text-red-600 text-xs mt-1">{errors.ciudad.message}</p>}
+            {errors.ciudad && <p className="text-red-500 text-xs mt-1">{errors.ciudad.message}</p>}
           </div>
         </div>
 
         {/* Nombre Productora */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            {t('label.nombreProductora')} <span className="text-red-500">*</span>
+            {t('form.productoraName')} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            placeholder={t('placeholder.nombreProductora')}
-            {...register('nombreProductora', { required: t('validation.required') })}
+            placeholder={t('form.productoraPlaceholder')}
+            {...register('nombreProductora', { required: t('form.required') })}
             className={inputClass(!!errors.nombreProductora)}
           />
-          {errors.nombreProductora && <p className="text-red-600 text-xs mt-1">{errors.nombreProductora.message}</p>}
+          {errors.nombreProductora && <p className="text-red-500 text-xs mt-1">{errors.nombreProductora.message}</p>}
         </div>
 
-        {/* Fechas: el formato mostrado (dd/mm/aaaa vs mm/dd/aaaa, 24h vs AM/PM)
-            lo entrega el propio navegador según el idioma/región del sistema
-            operativo del usuario, ya que se usa <input type="datetime-local">. */}
+        {/* Fechas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              {t('label.fechaInicio')} <span className="text-red-500">*</span>
+              {t('form.startDate')} <span className="text-red-500">*</span>
             </label>
             <input
               type="datetime-local"
-              {...register('fechaInicio', { required: t('validation.required') })}
+              {...register('fechaInicio', { required: t('form.required') })}
               className={inputClass(!!errors.fechaInicio)}
             />
-            {errors.fechaInicio && <p className="text-red-600 text-xs mt-1">{errors.fechaInicio.message}</p>}
+            {errors.fechaInicio && <p className="text-red-500 text-xs mt-1">{errors.fechaInicio.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              {t('label.fechaTermino')} <span className="text-red-500">*</span>
+              {t('form.endDate')} <span className="text-red-500">*</span>
             </label>
             <input
               type="datetime-local"
               {...register('fechaTermino', {
-                required: t('validation.required'),
-                validate: (value) =>
-                  !fechaInicio || new Date(value) > new Date(fechaInicio) || t('validation.fechaTerminoInvalida'),
+                required: t('form.required'),
+                validate: (val) => {
+                  const inicio = watch('fechaInicio');
+                  if (inicio && val && new Date(val) <= new Date(inicio)) {
+                    return t('form.dateEndError');
+                  }
+                  return true;
+                },
               })}
               className={inputClass(!!errors.fechaTermino)}
             />
-            {errors.fechaTermino && <p className="text-red-600 text-xs mt-1">{errors.fechaTermino.message}</p>}
+            {errors.fechaTermino && <p className="text-red-500 text-xs mt-1">{errors.fechaTermino.message}</p>}
           </div>
         </div>
+
+        {/* Fecha de registro (solo lectura en edición) */}
+        {isEdit && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">{t('form.registerDate')}</label>
+            <input
+              type="text"
+              value={new Date(eventoToEdit!.fechaRegistro).toLocaleString('es-CL')}
+              readOnly
+              className="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+            />
+          </div>
+        )}
 
         {/* Estado */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t('label.estado')} <span className="text-red-500">*</span>
+            {t('form.status')} <span className="text-red-500">*</span>
           </label>
-          <div className="flex gap-6">
-            {ESTADOS.map((estado) => (
-              <label key={estado} className="flex items-center gap-2 cursor-pointer">
+          <div className="flex flex-wrap gap-6">
+            {[
+              { value: 'Pendiente', label: t('form.statusPending') },
+              { value: 'Iniciado', label: t('form.statusStarted') },
+              { value: 'Finalizado', label: t('form.statusFinished') },
+            ].map(({ value, label }) => (
+              <label key={value} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
-                  value={estado}
-                  {...register('estado', { required: true })}
+                  value={value}
+                  {...register('estado', { required: t('form.required') })}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="text-sm text-gray-700">{t(`estado.${estado}`)}</span>
+                <span className="text-sm text-gray-700">{label}</span>
               </label>
             ))}
           </div>
+          {errors.estado && <p className="text-red-500 text-xs mt-1">{errors.estado.message}</p>}
         </div>
 
         {/* Botones */}
@@ -236,14 +268,14 @@ export default function EventoForm({ onSubmit, onCancel }: EventoFormProps) {
             disabled={isSubmitting}
             className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50 font-medium"
           >
-            {isSubmitting ? t('button.saving', { ns: 'common' }) : t('button.save', { ns: 'common' })}
+            {isSubmitting ? '...' : isEdit ? t('events.saveButton') : t('events.createButton')}
           </button>
           <button
             type="button"
             onClick={onCancel}
             className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300 transition font-medium"
           >
-            {t('button.cancel', { ns: 'common' })}
+            {t('events.cancelButton')}
           </button>
         </div>
       </form>

@@ -24,6 +24,7 @@ function writeEventos(eventos) {
   }
 }
 
+// Crear nuevo evento
 exports.createEvento = (eventoData) => {
   const eventos = readEventos();
   const maxId = eventos.length > 0 ? Math.max(...eventos.map(e => e.id)) : 1000;
@@ -38,11 +39,30 @@ exports.createEvento = (eventoData) => {
   return newEvento;
 };
 
+// Obtener todos los eventos ordenados por id descendente
 exports.getEventos = () => {
   const eventos = readEventos();
   return eventos.sort((a, b) => b.id - a.id);
 };
 
+// Actualizar evento (CRUD - Update)
+exports.updateEvento = (id, updateData) => {
+  const eventos = readEventos();
+  const index = eventos.findIndex(e => e.id === id);
+  if (index === -1) return null;
+  const evento = eventos[index];
+  // Campos editables (id y fechaRegistro no se modifican)
+  const camposEditables = ['nombreEvento','direccion','pais','ciudad','nombreProductora','fechaInicio','fechaTermino','estado'];
+  camposEditables.forEach(campo => {
+    if (updateData[campo] !== undefined) {
+      evento[campo] = updateData[campo];
+    }
+  });
+  writeEventos(eventos);
+  return evento;
+};
+
+// Eliminar evento
 exports.deleteEvento = (id) => {
   const eventos = readEventos();
   const index = eventos.findIndex(e => e.id === id);

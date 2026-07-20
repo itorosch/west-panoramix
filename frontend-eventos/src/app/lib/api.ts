@@ -11,6 +11,7 @@ export interface Evento {
   fechaTermino: string;
   fechaRegistro: string;
   estado: 'Pendiente' | 'Iniciado' | 'Finalizado';
+  productora?: string | null;
 }
 
 export async function getEventos(): Promise<Evento[]> {
@@ -19,7 +20,9 @@ export async function getEventos(): Promise<Evento[]> {
   return res.json();
 }
 
-export async function createEvento(evento: Omit<Evento, 'id' | 'fechaRegistro'>): Promise<Evento> {
+export async function createEvento(
+  evento: Omit<Evento, 'id' | 'fechaRegistro'>
+): Promise<Evento> {
   const res = await fetch(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -28,6 +31,22 @@ export async function createEvento(evento: Omit<Evento, 'id' | 'fechaRegistro'>)
   if (!res.ok) {
     const error = await res.json();
     throw new Error(error.message || 'Error al crear evento');
+  }
+  return res.json();
+}
+
+export async function updateEvento(
+  id: number,
+  evento: Partial<Omit<Evento, 'id' | 'fechaRegistro'>>
+): Promise<Evento> {
+  const res = await fetch(`${API_BASE}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(evento),
+  });
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || 'Error al actualizar evento');
   }
   return res.json();
 }

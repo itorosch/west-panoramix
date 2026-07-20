@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "West Panoramix",
+    "subtitle": "Event Management System"
+  },
+  "nav": {
+    "logout": "Log out",
+    "language": "Language"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "West Panoramix — Event Management",
+    "username": "Username",
+    "password": "Password",
+    "role": "Role",
+    "roleAdmin": "Administrator",
+    "roleProductora": "Producer",
+    "productora": "Producer name",
+    "submit": "Sign in",
+    "error": "Incorrect username or password"
+  },
+  "events": {
+    "listTitle": "Event List",
+    "addButton": "Register Event",
+    "editButton": "Edit",
+    "deleteButton": "Delete",
+    "saveButton": "Save changes",
+    "cancelButton": "Cancel",
+    "createButton": "Register Event",
+    "noEvents": "No events to display.",
+    "filterLabel": "Filter by status:",
+    "filterAll": "All",
+    "registered": "Registered:",
+    "productoraLabel": "Producer:",
+    "addressLabel": "Address:",
+    "startLabel": "Start:",
+    "endLabel": "End:",
+    "successCreate": "Event registered successfully.",
+    "successEdit": "Event updated successfully.",
+    "successDelete": "Event deleted successfully.",
+    "createTitle": "Register New Event",
+    "editTitle": "Edit Event"
+  },
+  "form": {
+    "id": "Event ID",
+    "idAuto": "Generated automatically",
+    "name": "Event Name",
+    "namePlaceholder": "Ex: International Folk Festival",
+    "address": "Address",
+    "addressPlaceholder": "Ex: 2233 Cowboys St.",
+    "country": "Country",
+    "countryPlaceholder": "— Select country —",
+    "city": "City",
+    "cityPlaceholder": "— Select city —",
+    "productoraName": "Producer Name",
+    "productoraPlaceholder": "Ex: Gamboa Productions",
+    "startDate": "Start Date and Time",
+    "endDate": "End Date and Time",
+    "registerDate": "Registration Date and Time",
+    "registerDateAuto": "Registered automatically",
+    "status": "Event Status",
+    "statusPending": "Pending",
+    "statusStarted": "Started",
+    "statusFinished": "Finished",
+    "required": "This field is required",
+    "dateEndError": "End date must be after start date"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "productora": "Producer"
+  }
+}
